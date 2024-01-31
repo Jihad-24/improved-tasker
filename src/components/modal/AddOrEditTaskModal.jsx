@@ -1,13 +1,13 @@
 /* eslint-disable react/prop-types */
 
-import { toast } from "react-toastify";
-import { useForm } from "../../utility/useForm";
-import { TaskContext } from "../../context";
 import { useContext } from "react";
+import { toast } from "react-toastify";
+import { TaskContext } from "../../context";
+import { useForm } from "../../utility/useForm";
 
 export default function AddOrEditTaskModal({
   onClose,
-  initialValues = {},
+  initialValues = [],
   isEditing = false,
 }) {
   const { dispatch } = useContext(TaskContext);
@@ -16,13 +16,14 @@ export default function AddOrEditTaskModal({
     useForm(initialValues);
   const handleForm = (e) => {
     const formData = handleSubmit(e);
-    const { tags, ...restData } = formData;
+    const { id, tags, ...restData } = formData;
 
     const newTask = {
       ...restData,
-      id: crypto.randomUUID(),
+      id: id || crypto.randomUUID(),
       tags: tags.split(",").map((tag) => tag.trim()),
     };
+
     if (!isEditing) {
       console.log("first");
 
@@ -40,7 +41,7 @@ export default function AddOrEditTaskModal({
         payload: {
           ...newTask,
         },
-      }); 
+      });
       onClose();
       toast.success("Task Edited Successfully.");
     }

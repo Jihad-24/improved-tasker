@@ -54,24 +54,27 @@ const taskReducer = (state, action) => {
           (task) => task.id !== action.payload.id
         ),
       };
+
     case "EDIT_TASK":
+      console.log("Editing task. Action payload:", action.payload);
       updatedTasksEdit = state.tasks.map((task) =>
-        task.id === action.payload.id ? action.payload : task
+        task.id === action.payload.id ? { ...task, ...action.payload } : task
       );
       updatedFilteredTasksEdit = state.filteredTasks.map((task) =>
-        task.id === action.payload.id ? action.payload : task
+        task.id === action.payload.id ? { ...task, ...action.payload } : task
       );
-
       return {
         ...state,
         tasks: updatedTasksEdit,
         filteredTasks: updatedFilteredTasksEdit,
       };
+
     case "SEARCH_TASKS": {
       const lowercaseSearchTerm = action.payload.toLowerCase();
       const filteredTasks = state.tasks.filter((task) =>
         task.title.toLowerCase().includes(lowercaseSearchTerm)
       );
+
       return {
         ...state,
         filteredTasks: filteredTasks,
